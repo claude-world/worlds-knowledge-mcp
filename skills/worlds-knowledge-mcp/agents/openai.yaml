@@ -1,0 +1,15 @@
+interface:
+  display_name: "Worlds Knowledge MCP"
+  short_description: "Route CLI work with current model-aware guidance"
+  default_prompt: "Use $worlds-knowledge-mcp to solve this CLI task with current, source-grounded guidance."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "worlds-knowledge"
+      description: "Current Claude Code, Codex CLI, and Grok Build knowledge and model advisor"
+      transport: "streamable_http"
+      url: "https://mcp.claude-world.com/mcp"
+
+policy:
+  allow_implicit_invocation: true

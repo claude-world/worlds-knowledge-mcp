@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    name: Verify skill and server manifest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.12'
+
+      - name: Validate server.json against the MCP server schema
+        run: |
+          node --input-type=module -e '
+            import { readFile } from "node:fs/promises";
+            import assert from "node:assert/strict";
+            const manifest = JSON.parse(await readFile("server.json", "utf8"));
+            assert.equal(manifest.name, "com.claude-world/worlds-knowledge");
+            assert.match(manifest.version, /^\d+\.\d+\.\d+$/);
+            assert.equal(manifest.repository.url, "https://github.com/claude-world/worlds-knowledge-mcp");
+            assert.equal(manifest.remotes[0].url, "https://mcp.claude-world.com/mcp");
+            assert.equal(manifest.remotes[0].type, "streamable-http");
+            const schema = await fetch(manifest.$schema);
+            assert.ok(schema.ok, `schema fetch failed: ${schema.status}`);
+            console.log("server.json: ok");
+          '
+
+      - name: Run the skill contract test
+        run: node --test skills/worlds-knowledge-mcp/tests/contract.test.mjs
+
+      - name: Check the public endpoint responds to initialize
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST https://mcp.claude-world.com/mcp \
+            -H 'content-type: application/json' \
+            -H 'accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"ci","version":"0"}}}')
+          echo "initialize -> HTTP $code"
+          test "$code" = "200"

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "claude-only-hard-problem",
+      "prompt": "I only use Claude Code. Find the root cause of a nondeterministic deadlock; do not edit anything yet.",
+      "expected": {
+        "first_tool": "worlds_advise_hard_problem",
+        "selection_scope": "current-cli",
+        "execution_intent": "read-only",
+        "available_clis": ["claude-code"],
+        "must_verify_live_catalog": true
+      }
+    },
+    {
+      "id": "codex-profile-syntax",
+      "prompt": "In Codex, does -p make the run non-interactive? Give me the current exact syntax.",
+      "expected": {
+        "tool_sequence": ["worlds_list_cli_versions", "worlds_search_cli_reference", "worlds_get_cli_command"],
+        "facts": ["-p selects a profile", "codex exec is non-interactive"],
+        "must_not_translate_provider_flags": true
+      }
+    },
+    {
+      "id": "grok-only-authorized-fix",
+      "prompt": "I only have Grok Build. Diagnose and fix this difficult parser bug in the workspace.",
+      "expected": {
+        "first_tool": "worlds_advise_hard_problem",
+        "selection_scope": "current-cli",
+        "execution_intent": "may-edit",
+        "available_clis": ["grok-build"],
+        "must_not_add_permission_bypass": true
+      }
+    },
+    {
+      "id": "multi-cli-work-plan",
+      "prompt": "I have Claude Code, Codex, and Grok Build. Plan independent implementation and review tracks for this migration without starting them.",
+      "expected": {
+        "tool_sequence": ["worlds_list_cli_models", "worlds_plan_cli_work"],
+        "available_clis": ["claude-code", "codex", "grok-build"],
+        "execution_intent": "read-only",
+        "must_preserve_model_effort_orchestration_separation": true
+      }
+    }
+  ]
+}

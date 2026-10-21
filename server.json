@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.claude-world/worlds-knowledge",
+  "title": "AI Worlds CLI Knowledge",
+  "description": "Source-checked CLI guides and model-aware planning for Claude Code, Codex, and Grok Build.",
+  "version": "0.5.0",
+  "websiteUrl": "https://claude-world.com/mcp/",
+  "repository": {
+    "url": "https://github.com/claude-world/worlds-knowledge-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.claude-world.com/mcp"
+    }
+  ]
+}
