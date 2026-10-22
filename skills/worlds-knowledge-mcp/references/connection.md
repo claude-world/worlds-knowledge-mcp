@@ -31,17 +31,19 @@ Add this durable project instruction when automatic use is desired:
 
 ## Install this Skill
 
-After cloning this repository, copy the whole skill directory into the user's
-cross-tool discovery folder:
+The skill is published at <https://github.com/claude-world/worlds-knowledge-mcp>.
+Clone it and copy the whole skill directory into the user's cross-tool discovery
+folder:
 
 ```sh
-cp -R skills/worlds-knowledge-mcp ~/.agents/skills/
+git clone https://github.com/claude-world/worlds-knowledge-mcp.git
+cp -R worlds-knowledge-mcp/skills/worlds-knowledge-mcp ~/.agents/skills/
 ```
 
 For Claude Code's native skill location, use:
 
 ```sh
-cp -R skills/worlds-knowledge-mcp ~/.claude/skills/
+cp -R worlds-knowledge-mcp/skills/worlds-knowledge-mcp ~/.claude/skills/
 ```
 
 Restart the client after installation. Keep `SKILL.md`, `references/`, and
